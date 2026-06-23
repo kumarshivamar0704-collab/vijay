@@ -5,17 +5,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5 libncurses5-dev libncursesw5 cmake libffi-dev libssl-dev
-          pip3 install --user --upgrade buildozer
       - name: Build with Buildozer
+        uses: docker://crystax/android-ndk:latest # Ye container environment hai
+        # Hum Buildozer ko directly docker container mein chalaenge
+        continue-on-error: false
+        env:
+          SDKMAN_ACCEPT_LICENSE: "true"
         run: |
-          # Permission issue fix: Buildozer ko current folder mein rakho
+          apt-get update && apt-get install -y python3-pip git
+          pip3 install --upgrade buildozer
+          # Permission fix ke liye local path use kar rahe hain
           export BUILDOZER_HOME=.buildozer
-          # Buildozer ko chalao
-          buildozer --verbose android debug
+          buildozer -v android debug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
