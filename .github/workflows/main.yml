@@ -10,10 +10,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev
           pip3 install --user --upgrade buildozer
-      - name: Build with Buildozer
-        env:
-          # Auto-accept licenses
-          ANDROIDSDK: "true"
+      - name: Patch buildozer.spec
         run: |
-          # Buildozer ko bina zyada verbose mode ke chalao
+          # Automatically remove # from the specific line and set config
+          sed -i 's/#source.include_exts/source.include_exts/g' buildozer.spec
+          sed -i 's/#android.accept_sdk_license/android.accept_sdk_license/g' buildozer.spec
+      - name: Build with Buildozer
+        run: |
           buildozer -v android debug
