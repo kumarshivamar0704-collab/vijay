@@ -12,9 +12,12 @@ jobs:
           pip3 install --user --upgrade buildozer
       - name: Patch buildozer.spec
         run: |
-          # Automatically remove # from the specific line and set config
-          sed -i 's/#source.include_exts/source.include_exts/g' buildozer.spec
-          sed -i 's/#android.accept_sdk_license/android.accept_sdk_license/g' buildozer.spec
+          # Yeh command bina file khole usme changes kar degi
+          sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
+          sed -i 's/#android.accept_sdk_license =/android.accept_sdk_license =/g' buildozer.spec
       - name: Build with Buildozer
+        env:
+          # Yeh environment variable SDK licenses ko automatically accept kar leta hai
+          SDKMAN_ACCEPT_LICENSE: "true"
         run: |
           buildozer -v android debug
