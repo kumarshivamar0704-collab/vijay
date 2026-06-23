@@ -11,5 +11,9 @@ jobs:
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev
           pip3 install --user --upgrade buildozer
       - name: Build with Buildozer
+        env:
+          # Auto-accept licenses
+          ANDROIDSDK: "true"
         run: |
-          yes | buildozer android debug
+          # Buildozer ko bina zyada verbose mode ke chalao
+          buildozer -v android debug
